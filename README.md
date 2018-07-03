@@ -23,12 +23,6 @@ https://hub.docker.com/r/alpine/helm/tags/
     help --help
 
 
-# A complex use-case.
-
-Surpose you need run with kubectl and heptio as well to access AWS EKS Cluster. kubectl and heptio must be downloaded for Linux version.
-
->docker run -ti --rm -v ~/.kube/config:/root/.kube/config -e AWS_SESSION_TOKEN=xxx -e AWS_SECRET_ACCESS_KEY=xxx -e AWS_ACCESS_KEY_ID=xxx -e AWS_REGION=us-west-2 -v /usr/bin/heptio-authenticator-aws:/usr/bin/heptio-authenticator-aws -v /usr/bin/kubectl:/usr/bin/kubectl --entrypoint=sh alpine/helm:2.9.0
-
 # Why use it
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment

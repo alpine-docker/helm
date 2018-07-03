@@ -22,6 +22,10 @@ https://hub.docker.com/r/alpine/helm/tags/
     alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.kube/config:/root/.kube/config alpine/helm:2.9.0"
     help --help
 
+# Why use it
+
+Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
+
 # The Processes to build this image
 
 * Enable Travis CI cronjob on this repo to run build daily on master branch

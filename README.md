@@ -1,4 +1,4 @@
-# helm
+# helm - DRAFT
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced
 
 ### Repo:
@@ -21,6 +21,11 @@ https://hub.docker.com/r/alpine/helm/tags/
     # run terraform-landscape container as command
     alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.kube/config:/root/.kube/config alpine/helm:2.9.0"
     help --help
+
+
+# Why use it
+
+Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
 
 # The Processes to build this image
 

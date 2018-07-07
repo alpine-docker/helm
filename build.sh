@@ -27,6 +27,18 @@ done
 
 if [[ ( $sum -ne 1 ) || ( $1 == "rebuild" ) ]];then
   docker build --no-cache --build-arg VERSION=$latest -t ${image}:${latest} .
+
+  # test
+  version=$(docker run -ti --rm ${image}:${latest} version -c )
+  #Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
+  version=$(echo $version| awk -F \" '{print $2}')
+  if [ "${version}" == "v${latest}" ]; then
+    echo "matched"
+  else
+    echo "unmatched"
+    exit
+  fi
+
   docker tag ${image}:${latest} ${image}:latest
 
   if [[ "$TRAVIS_BRANCH" == "master" ]]; then

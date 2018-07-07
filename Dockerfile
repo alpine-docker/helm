@@ -1,9 +1,9 @@
 FROM alpine:edge
 
-ARG HELM_VERSION=2.9.0
+ARG VERSION=2.9.1
 
 ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
-ENV TAR_FILE="helm-v${HELM_VERSION}-linux-amd64.tar.gz"
+ENV TAR_FILE="helm-v${VERSION}-linux-amd64.tar.gz"
 
 RUN apk add --update --no-cache curl ca-certificates && \
     curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \

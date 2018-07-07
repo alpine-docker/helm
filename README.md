@@ -16,11 +16,11 @@ https://hub.docker.com/r/alpine/helm/tags/
 # Usage:
 
     # must mount the local folder to /apps in container.
-    docker run -ti --rm -v $(pwd):/apps -v ~/.kube/config:/root/.kube/config alpine/helm:2.9.0
+    docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm:2.9.1
 
-    # run terraform-landscape container as command
-    alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.kube/config:/root/.kube/config alpine/helm:2.9.0"
-    help --help
+    # run container as command
+    alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm:2.9.1"
+    helm --help
 
 
 # Why use it

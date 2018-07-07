@@ -1,4 +1,4 @@
-# helm
+# kubernetes helm
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced
 
 ### Repo:

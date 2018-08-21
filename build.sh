@@ -12,7 +12,7 @@ Usage() {
 image="alpine/helm"
 repo="kubernetes/helm"
 
-latest=`curl -s https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head -1|sed 's/^v//'`
+latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head -1|sed 's/^v//'`
 sum=0
 echo "Lastest release is: ${latest}"
 

@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
 # Prerequisite
-# Make sure you set secret enviroment variables: DOCKER_USERNAME and  DOCKER_PASSWORD in Travis CI
+# Make sure you set secret enviroment variables in Travis CI
+# DOCKER_USERNAME
+# DOCKER_PASSWORD
+# API_USER
+# API_TOKEN
 
 set -ex
 
@@ -12,7 +16,7 @@ Usage() {
 image="alpine/helm"
 repo="kubernetes/helm"
 
-latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head -1|sed 's/^v//'`
+latest=`curl -sL -u ${API_USER}:${API_TOKEN}  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head -1|sed 's/^v//'`
 sum=0
 echo "Lastest release is: ${latest}"
 

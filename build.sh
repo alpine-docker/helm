@@ -16,7 +16,7 @@ latest=`curl -s https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head
 sum=0
 echo "Lastest release is: ${latest}"
 
-tags=`curl -s https://hub.docker.com/v2/repositories/${image}/tags/ |jq -r .results[].name`
+tags=`curl -sL https://hub.docker.com/v2/repositories/${image}/tags/ |jq -r .results[].name`
 
 for i in ${tags}
 do

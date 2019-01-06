@@ -16,12 +16,14 @@ https://hub.docker.com/r/alpine/helm/tags/
 # Usage:
 
     # must mount the local folder to /apps in container.
-    docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm:2.9.1
+    docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm
 
     # run container as command
-    alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm:2.9.1"
+    alias helm="docker run -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm"
     helm --help
-
+    
+    # example in ~/.bash_profile
+    alias helm='docker run -e KUBECONFIG="/root/.kube/config:/root/.kube/some-other-context.yaml" -ti --rm -v $(pwd):/apps -v ~/.kube:/root/.kube alpine/helm'
 
 # Why use it
 

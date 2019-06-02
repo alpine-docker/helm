@@ -5,7 +5,8 @@ FROM alpine:edge
 
 ARG VERSION
 
-ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
+# ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
+ENV BASE_URL="https://get.helm.sh"
 ENV TAR_FILE="helm-v${VERSION}-linux-amd64.tar.gz"
 
 RUN apk add --update --no-cache curl ca-certificates && \

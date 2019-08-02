@@ -53,3 +53,17 @@ do
     build
   fi
 done
+
+
+# deal with latest release
+# <html><body>You are being <a href="https://github.com/helm/helm/releases/tag/v2.14.3">redirected</a>.</body></html>
+latest=$(curl -s https://github.com/${repo}/releases/latest)
+latest=$(echo $latest\" |grep -oP '(?<=tag\/)v[0-9][^"]*')
+echo $latest
+
+if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+  docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  docker pull ${image}:${latest}
+  docker tag ${image}:${latest} ${image}:latest
+  docker push ${image}:latest
+fi

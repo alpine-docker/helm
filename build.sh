@@ -18,7 +18,7 @@ build() {
   docker build --no-cache --build-arg VERSION=${BUILD_TAG} -t ${image}:${BUILD_TAG} .
 
   # test
-  version=$(docker run -ti --rm ${image}:${BUILD_TAG} version )
+  version=`docker run -ti --rm ${image}:${BUILD_TAG} version --client`
   #Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
   version=$(echo ${version}| awk -F \" '{print $2}')
   if [ "${version}" == "v${BUILD_TEST}" ]; then

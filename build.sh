@@ -13,15 +13,14 @@ Usage() {
 }
 
 build() {
-  BUILD_TAG=$1
 
-  docker build --no-cache --build-arg VERSION=${BUILD_TAG} -t ${image}:${BUILD_TAG} .
+  docker build --no-cache --build-arg VERSION=${tag} -t ${image}:${tag} .
 
   # test
-  version=`docker run -ti --rm ${image}:${BUILD_TAG} version --client`
+  version=$(docker run -ti --rm ${image}:${tag} version --client)
   #Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
   version=$(echo ${version}| awk -F \" '{print $2}')
-  if [ "${version}" == "v${BUILD_TEST}" ]; then
+  if [ "${version}" == "v${tag}" ]; then
     echo "matched"
   else
     echo "unmatched"
@@ -30,7 +29,7 @@ build() {
 
   if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${image}:${BUILD_TAG}
+    docker push ${image}:${tag}
   fi
 }
 
@@ -51,6 +50,6 @@ do
   status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
   echo $status
   if [[ "${status}" =~ "Not found" ]]; then
-    build ${tag}
+    build
   fi
 done

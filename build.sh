@@ -38,12 +38,11 @@ image="alpine/helm"
 repo="helm/helm"
 
 if [[ ${CI} == 'true' ]]; then
-  CURL="curl -sL -H \"Authorization: token ${API_TOKEN}\""
+  latest=`curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|head -10|sed 's/^v//'`
 else
-  CURL="curl -sL"
+  latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|head -10|sed 's/^v//'`
 fi
 
-latest=`${CURL} https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head -10|sed 's/^v//'`
 echo "Lastest releases are: ${latest}"
 
 for tag in ${latest}

@@ -6,7 +6,7 @@
 # DOCKER_PASSWORD
 # API_TOKEN
 
-set -ex
+# set -ex
 
 build() {
 

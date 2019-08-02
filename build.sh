@@ -8,15 +8,12 @@
 
 set -ex
 
-Usage() {
-  echo "$0"
-}
-
 build() {
 
+  echo "Found new version, building the image ${image}:${tag}"
   docker build --no-cache --build-arg VERSION=${tag} -t ${image}:${tag} .
 
-  # test
+  # run test
   version=$(docker run -ti --rm ${image}:${tag} version --client)
   #Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
   version=$(echo ${version}| awk -F \" '{print $2}')
@@ -42,8 +39,6 @@ else
   latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|head -10|sed 's/^v//'`
 fi
 
-echo "Lastest releases are: ${latest}"
-
 for tag in ${latest}
 do
   echo $tag
@@ -54,8 +49,8 @@ do
   fi
 done
 
-
-# deal with latest release
+echo "Update latest image with latest release"
+# output format for reference:
 # <html><body>You are being <a href="https://github.com/helm/helm/releases/tag/v2.14.3">redirected</a>.</body></html>
 latest=$(curl -s https://github.com/${repo}/releases/latest)
 latest=$(echo $latest\" |grep -oP '(?<=tag\/v)[0-9][^"]*')

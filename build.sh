@@ -9,45 +9,47 @@
 set -ex
 
 Usage() {
-  echo "$0 [rebuild]"
+  echo "$0"
 }
 
-image="alpine/helm"
-repo="helm/helm"
+build() {
 
-latest=`curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|head -1|sed 's/^v//'`
-sum=0
-echo "Lastest release is: ${latest}"
-
-tags=`curl -sL https://hub.docker.com/v2/repositories/${image}/tags/ |jq -r .results[].name`
-
-for i in ${tags}
-do
-  if [ ${i} == ${latest} ];then
-    sum=$((sum+1))
-  fi
-done
-
-if [[ ( $sum -ne 1 ) || ( $1 == "rebuild" ) ]];then
-  docker build --no-cache --build-arg VERSION=$latest -t ${image}:${latest} .
+  docker build --no-cache --build-arg VERSION=${tag} -t ${image}:${tag} .
 
   # test
-  version=$(docker run -ti --rm ${image}:${latest} version )
+  version=$(docker run -ti --rm ${image}:${tag} version --client)
   #Client: &version.Version{SemVer:"v2.9.0-rc2", GitCommit:"08db2d0181f4ce394513c32ba1aee7ffc6bc3326", GitTreeState:"clean"}
-  version=$(echo $version| awk -F \" '{print $2}')
-  if [ "${version}" == "v${latest}" ]; then
+  version=$(echo ${version}| awk -F \" '{print $2}')
+  if [ "${version}" == "v${tag}" ]; then
     echo "matched"
   else
     echo "unmatched"
     exit
   fi
 
-  docker tag ${image}:${latest} ${image}:latest
-
   if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${image}:${latest}
-    docker push ${image}:latest
+    docker push ${image}:${tag}
   fi
+}
 
+image="alpine/helm"
+repo="helm/helm"
+
+if [[ ${CI} == 'true' ]]; then
+  latest=`curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|head -10|sed 's/^v//'`
+else
+  latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|head -10|sed 's/^v//'`
 fi
+
+echo "Lastest releases are: ${latest}"
+
+for tag in ${latest}
+do
+  echo $tag
+  status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
+  echo $status
+  if [[ "${status}" =~ "Not found" ]]; then
+    build
+  fi
+done

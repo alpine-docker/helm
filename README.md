@@ -6,7 +6,7 @@ Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/he
 
 ## NOTES
 
-The latest docker tag is the latest release verison (https://github.com/helm/helm/releases)
+The latest docker tag is the latest release verison (https://github.com/helm/helm/releases/latest)
 
 Please avoid to use `latest` tag for any production deployment. Tag with right version is the proper way, such as `alpine/helm:2.14.0`
 

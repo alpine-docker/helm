@@ -49,7 +49,7 @@ do
   echo $tag
   status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
   echo $status
-  if [[ "${status}" =~ "Not found" ]]; then
+  if [[ "${status}" =~ "not found" ]]; then
     build
   fi
 done

@@ -46,4 +46,5 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 * Enable Travis CI cronjob on this repo to run build daily on master branch
 * Check if there are new tags/releases announced via Github REST API
 * Match the exist docker image tags via Hub.docker.io REST API
-* If not matched, build the image with latest version as tag and push to hub.docker.com
+* If not matched, build the image with release version and push to https://hub.docker.com/
+* Get the latest version from https://github.com/helm/helm/releases/latest, pull the image with that version, tag as `alpine/helm:latest` and push to hub.docker.com

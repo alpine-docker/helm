@@ -61,7 +61,7 @@ latest=$(curl -s https://github.com/${repo}/releases)
 latest=$(echo $latest\" |grep -oP '(?<=tag\/v)[0-9][^"-]*'|sort -Vr|head -1)
 echo $latest
 
-if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
   docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   docker pull ${image}:${latest}
   docker tag ${image}:${latest} ${image}:latest

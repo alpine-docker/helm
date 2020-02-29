@@ -24,27 +24,27 @@ https://hub.docker.com/r/alpine/helm/tags/
 
 # Usage
 
-    # must mount the local folder to /apps in container.
-    docker run -ti --rm -v $(pwd):/apps \
+    # mount local folders in container.
+    docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
         alpine/helm
 
     # Run helm with special version. The tag is helm's version
-    docker run -ti --rm -v $(pwd):/apps \
+    docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
         alpine/helm:3.1.1
 
     # run container as command
-    alias helm="docker run -ti --rm -v $(pwd):/apps \
+    alias helm="docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
         alpine/helm"
     helm --help
     
     # example in ~/.bash_profile
-    alias helm='docker run -e KUBECONFIG="/root/.kube/config:/root/.kube/some-other-context.yaml" -ti --rm -v $(pwd):/apps \
+    alias helm='docker run -e KUBECONFIG="/root/.kube/config:/root/.kube/some-other-context.yaml" -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
         alpine/helm'

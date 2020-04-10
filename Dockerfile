@@ -7,14 +7,16 @@ ARG VERSION
 
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
+ENV PUSH_PLUGIN_URL="https://github.com/chartmuseum/helm-push.git"
 ENV TAR_FILE="helm-v${VERSION}-linux-amd64.tar.gz"
 
-RUN apk add --update --no-cache curl ca-certificates && \
+RUN apk add --update --no-cache curl git ca-certificates && \
     curl -L ${BASE_URL}/${TAR_FILE} |tar xvz && \
     mv linux-amd64/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
+    helm plugin install ${PUSH_PLUGIN_URL} && \
     rm -rf linux-amd64 && \
-    apk del curl && \
+    apk del curl git && \
     rm -f /var/cache/apk/*
 
 WORKDIR /apps

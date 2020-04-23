@@ -39,7 +39,7 @@ image="alpine/helm"
 repo="helm/helm"
 
 if [[ ${CI} == 'true' ]]; then
-  latest=`curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|head -20|sed 's/^v//'`
+  latest=`curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|sed 's/^v//'`
 else
   latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|sed 's/^v//'`
 fi

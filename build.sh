@@ -38,20 +38,24 @@ build() {
 image="alpine/helm"
 repo="helm/helm"
 
-if [[ ${CI} == 'true' ]]; then
-  latest=`curl -sL -H "Authorization: token ${API_TOKEN}"  https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|sed 's/^v//'`
-else
-  latest=`curl -sL https://api.github.com/repos/${repo}/tags |jq -r ".[].name"|sort -Vr|sed 's/^v//'`
-fi
+# https://gist.github.com/mbohun/b161521b2440b9f08b59#file-githubapi-get-sh
+GITHUB_API_HEADER_ACCEPT="Accept: application/vnd.github.v3+json"
+echo $API_TOKEN
+last_page=`curl -s -I "https://api.github.com/repos/${repo}/tags" -H "${GITHUB_API_HEADER_ACCEPT}" -H "Authorization: token ${API_TOKEN}" | grep '^Link:' | sed -e 's/^Link:.*page=//g' -e 's/>.*$//g'`
 
-for tag in ${latest}
-do
-  echo $tag
-  status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
-  echo $status
-  if [[ "${status}" =~ "not found" ]]; then
-    build
-  fi
+echo ${last_page}
+for p in `seq 1 $last_page`; do
+    tags=`curl -sL -H "Authorization: token ${API_TOKEN}" https://api.github.com/repos/${repo}/tags?page=$p |jq -r ".[].name"|sort -Vr|sed 's/^v//'`
+
+    for tag in $tags
+    do
+      echo $tag
+      status=$(curl -sL https://hub.docker.com/v2/repositories/${image}/tags/${tag})
+      echo $status
+      if [[ "${status}" =~ "not found" ]]; then
+        build
+      fi
+    done
 done
 
 echo "Update latest image with latest release"

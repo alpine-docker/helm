@@ -29,10 +29,10 @@ build() {
     exit
   fi
 
-  if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+  #if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${image}:${tag}
-  fi
+  #fi
 }
 
 image="alpine/helm"

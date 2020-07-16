@@ -58,7 +58,7 @@ echo "Update latest image with latest release"
 # output format for reference:
 # <html><body>You are being <a href="https://github.com/helm/helm/releases/tag/v2.14.3">redirected</a>.</body></html>
 latest=$(curl -s https://github.com/${repo}/releases)
-latest=$(echo $latest\" |grep -oP '(?<=tag\/v)[0-9][^"-]*'|sort -Vr|head -1)
+latest=$(echo $latest\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
 echo $latest
 
 if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then

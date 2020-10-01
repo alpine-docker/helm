@@ -3,5 +3,19 @@ sudo: required
 services:
   - docker
 
-script:
-  - bash ./build.sh
+jobs:
+  include:
+    - stage: build amd64
+      script: 
+      - bash ./build.sh
+    - stage: build ppc64le
+      arch: ppc64le
+      before_script:
+      - sudo apt-get -qq update
+      - sudo apt-get -y install jq
+      script:
+      - bash ./build.sh
+    - stage: make multi-arch images
+      script:
+      - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./multiarch-image.sh; fi'
+

@@ -30,8 +30,13 @@ build() {
   fi
 
   if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+    semver=( ${tag//./ } )
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     docker push ${image}:${tag}
+    docker tag ${image}:${tag} ${image}:${semver[0]}.${semver[1]}
+    docker push ${image}:${semver[0]}.${semver[1]}
+    docker tag ${image}:${tag} ${image}:${semver[0]}
+    docker push ${image}:${semver[0]}
   fi
 }
 

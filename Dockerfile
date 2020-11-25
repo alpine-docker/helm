@@ -19,5 +19,4 @@ RUN apk add --update --no-cache curl ca-certificates && \
 
 WORKDIR /apps
 
-ENTRYPOINT ["helm"]
-CMD ["--help"]
+CMD ["helm", "--help"]

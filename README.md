@@ -22,38 +22,38 @@ https://travis-ci.org/alpine-docker/helm
 
 https://hub.docker.com/r/alpine/helm/tags/
 
-# Usage
+## Usage
 
     # mount local folders in container.
     docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
-        alpine/helm
+        alpine/helm helm --help
 
     # Run helm with special version. The tag is helm's version
     docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
-        alpine/helm:3.1.1
+        alpine/helm:3.1.1 helm --help
 
     # run container as command
-    alias helm="docker run -ti --rm -v $(pwd):/apps -w /apps \
+    alias helm='docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
-        alpine/helm"
+        alpine/helm helm'
     helm --help
     
     # example in ~/.bash_profile
     alias helm='docker run -e KUBECONFIG="/root/.kube/config:/root/.kube/some-other-context.yaml" -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
-        alpine/helm'
+        alpine/helm helm'
 
-# Why we need it
+## Why we need it
 
 Mostly it is used during CI/CD (continuous integration and continuous delivery) or as part of an automated build/deployment
 
-# The Processes to build this image
+## The Processes to build this image
 
 * Enable Travis CI cronjob on this repo to run build daily on master branch
 * Check if there are new tags/releases announced via Github REST API

@@ -10,6 +10,8 @@ The latest docker tag is the latest release version (https://github.com/helm/hel
 
 Please avoid to use `latest` tag for any production deployment. Tag with right version is the proper way, such as `alpine/helm:3.1.1`
 
+If you need run `kubectl` with `helm` together, please use another image [alpine/k8s](https://github.com/alpine-docker/k8s)
+
 ### Github Repo
 
 https://github.com/alpine-docker/helm

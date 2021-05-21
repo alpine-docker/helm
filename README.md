@@ -18,7 +18,7 @@ https://github.com/alpine-docker/helm
 
 ### Daily Travis CI build logs
 
-https://travis-ci.org/alpine-docker/helm
+https://travis-ci.com/alpine-docker/helm
 
 ### Docker image tags
 

@@ -36,7 +36,7 @@ build() {
     docker buildx create --use
     docker buildx build --no-cache --push \
 		--build-arg VERSION=${tag} \
-		--platform linux/arm/v7,linux/arm64/v8,linux/amd64 \
+		--platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x \
 		-t ${image}:${tag} .
   fi
 }

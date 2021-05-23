@@ -31,7 +31,13 @@ build() {
 
   if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    docker push ${image}:${tag}
+
+    # multi-arch build
+    docker buildx create --use
+    docker buildx build --no-cache --push \
+		--build-arg VERSION=${tag} \
+		--platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x \
+		-t ${image}:${tag} .
   fi
 }
 
@@ -61,6 +67,7 @@ latest=$(curl -s https://github.com/${repo}/releases)
 latest=$(echo $latest\" |grep -oP '(?<=tag\/v)[0-9][^"]*'|grep -v \-|sort -Vr|head -1)
 echo $latest
 
+# tag "latest" doesn't support multi-arch images, only for amd64
 if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_PULL_REQUEST" == false ]]; then
   docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   docker pull ${image}:${latest}

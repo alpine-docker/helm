@@ -20,7 +20,7 @@ RUN case `uname -m` in \
     curl -L ${BASE_URL}/helm-v${VERSION}-linux-${ARCH}.tar.gz |tar xvz && \
     mv linux-${ARCH}/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
-    rm -rf linux-${ARCH}&& \
+    rm -rf linux-${ARCH} && \
     apk del curl && \
     rm -f /var/cache/apk/*
 

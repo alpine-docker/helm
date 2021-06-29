@@ -34,14 +34,10 @@ build() {
 
     # multi-arch build
     docker buildx create --use
-    for platform in linux/amd64 linux/arm/v7 linux/arm64/v8 linux/arm/v6 linux/ppc64le linux/s390x
-    do
-      docker buildx build --no-cache --push \
+    docker buildx build --no-cache --push \
 		--build-arg VERSION=${tag} \
-		--platform ${platform} \
+		--platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x \
 		-t ${image}:${tag} .
-      sleep 3
-    done
   fi
 }
 

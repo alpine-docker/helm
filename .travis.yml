@@ -12,7 +12,7 @@ before_install:
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
   - sudo apt-get update
   - sudo wget http://ftp.de.debian.org/debian/pool/main/libs/libseccomp/libseccomp-dev_2.5.1-1_amd64.deb
-  - sudo dpkg -i libseccomp2_2.5.1-1_armhf.deb
+  - sudo dpkg -i libseccomp-dev_2.5.1-1_amd64.deb
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
 

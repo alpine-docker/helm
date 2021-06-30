@@ -10,7 +10,7 @@ before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
   - lsb_release -cs
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
-  - sudo apt-get update
+  - sudo apt-get -o Dpkg::Options::="--force-confnew" update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install libseccomp-dev
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset

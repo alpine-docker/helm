@@ -1,3 +1,5 @@
+# After Travis CI adjusts their plan, we don't have enough free credit to run the build. So daily build has been adjusted to weekly. If you don't get latest version, please wait for one week.
+
 # kubernetes helm
 
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced

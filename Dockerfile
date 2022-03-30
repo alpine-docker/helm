@@ -26,5 +26,5 @@ RUN chmod +x /usr/bin/helm
 
 WORKDIR /apps
 
-ENTRYPOINT ["helm"]
+ENTRYPOINT ["/bin/sh", "-c"]
 CMD ["--help"]

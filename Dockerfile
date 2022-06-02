@@ -16,7 +16,7 @@ RUN case `uname -m` in \
         s390x) ARCH=s390x; ;; \
         *) echo "un-supported arch, exit ..."; exit 1; ;; \
     esac && \
-    apk add --update --no-cache wget git && \
+    apk add --update --no-cache wget git curl && \
     wget ${BASE_URL}/helm-v${VERSION}-linux-${ARCH}.tar.gz -O - | tar -xz && \
     mv linux-${ARCH}/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \

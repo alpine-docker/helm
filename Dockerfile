@@ -5,6 +5,8 @@ FROM alpine:3
 
 ARG VERSION
 
+LABEL org.opencontainers.image.source="https://github.com/alpine-docker/helm"
+
 # ENV BASE_URL="https://storage.googleapis.com/kubernetes-helm"
 ENV BASE_URL="https://get.helm.sh"
 

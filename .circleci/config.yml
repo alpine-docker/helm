@@ -15,6 +15,7 @@ parameters:
 
 jobs:
   build:
+    context: Docker-Hub
     docker:
       - image: alpine/docker-with-buildx
     environment:
@@ -30,7 +31,6 @@ jobs:
 
 workflows:
   build:
-    context: Docker-Hub
     jobs:
       - build:
           name: build
@@ -41,7 +41,6 @@ workflows:
                 - main
 
   nightly:
-    context: Docker-Hub
     triggers:
        - schedule:
            cron: "0 3 * * 0"

@@ -15,7 +15,6 @@ parameters:
 
 jobs:
   build:
-    context: Docker-Hub
     docker:
       - image: alpine/docker-with-buildx
     environment:
@@ -34,6 +33,8 @@ workflows:
     jobs:
       - build:
           name: build
+          context:
+            - Docker-Hub
           filters:
             branches:
               only:
@@ -52,6 +53,8 @@ workflows:
     jobs:
       - build:
           name: build
+          context:
+            - Docker-Hub
           filters:
             branches:
               only:

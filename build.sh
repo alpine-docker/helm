@@ -21,7 +21,7 @@ install_jq() {
 build() {
 
   docker build --no-cache \
-    --build-arg HELM_VERSION=${tag} \
+    --build-arg VERSION=${tag} \
     -t ${image}:${tag} .
 
   # run test
@@ -47,7 +47,7 @@ build() {
     docker buildx create --use
     docker buildx build --no-cache --push \
       --platform=linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x \
-      --build-arg HELM_VERSION=${tag} \
+      --build-arg VERSION=${tag} \
       -t ${image}:${tag} .
 
   ./crane copy ${image}:${tag} ${image}:latest

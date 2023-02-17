@@ -26,7 +26,7 @@ build() {
 
   # run test
   echo "Detected Helm3+"
-  version=$(docker run --rm ${image}:${tag} helm version)
+  version=$(docker run --rm ${image}:${tag} version)
   # version.BuildInfo{Version:"v3.6.3", GitCommit:"d506314abfb5d21419df8c7e7e68012379db2354", GitTreeState:"clean", GoVersion:"go1.16.5"}
 
   version=$(echo ${version}| awk -F \" '{print $2}')

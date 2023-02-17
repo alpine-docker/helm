@@ -30,11 +30,18 @@ jobs:
 
 workflows:
   build:
+    context: Docker-Hub
     jobs:
       - build:
           name: build
+          filters:
+            branches:
+              only:
+                - master
+                - main
 
   nightly:
+    context: Docker-Hub
     triggers:
        - schedule:
            cron: "0 3 * * 0"

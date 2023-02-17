@@ -18,17 +18,17 @@ If you need run `kubectl` with `helm` together, please use another image [alpine
 
 This feature was added on 23th May 2021.
 
-1. Version 3.5.4 and 3.6.0-rc.1 are manually pushed by me with multi-arch image supported
-2. Older version will be not updated as multi-arch images
-3. Newer vesions from now on will be multi-arch images (`--platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x`)
-4. I don't support other architectures, except `amd64`, because I have no other environments to do that. If you have any issues with other platforms, you need raise PR to fix it.
-5. There is no difference to run `docker pull` , `docker run` commands with multi-arch docker images, you can run them as normal. For example, if you need pull image from arm64 (such as new Mac M1 chip), you can run `docker pull alpine/helm:3.5.4` to get the image directly. Remember.
+1. Versions 3.5.4 and 3.6.0-rc.1 have been manually pushed with support for multi-arch images.
+2. Older versions will not be updated to support multi-arch images.
+3. Newer versions going forward will support multi-arch images, including: --platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x.
+4. I do not support other architectures besides amd64 since I do not have the necessary environments to test them. If you experience any issues with other platforms, please raise a PR to fix it.
+5. There is no difference in running `docker pull` and `docker run` commands with multi-arch docker images; you can run them as normal. For example, if you need to pull an image from arm64 (such as the new Mac M1 chip), you can run `docker pull alpine/helm:3.5.4` to get the image directly. Remember to specify the desired version number.
 
 ### Github Repo
 
 https://github.com/alpine-docker/helm
 
-### Daily CI build logs
+### CI build logs
 
 https://app.circleci.com/pipelines/github/alpine-docker/helm?branch=master
 
@@ -69,8 +69,7 @@ Mostly it is used during CI/CD (continuous integration and continuous delivery) 
 
 # The Processes to build this image
 
-* Enable Travis CI cronjob on this repo to run build daily on master branch
+* Enable CI cronjob on this repo to run build regularly on master branch
 * Check if there are new tags/releases announced via Github REST API
 * Match the exist docker image tags via Hub.docker.io REST API
 * If not matched, build the image with release version and push to https://hub.docker.com/
-* Get the latest version from https://github.com/helm/helm/releases/latest, pull the image with that version, tag as `alpine/helm:latest` and push to hub.docker.com

@@ -1,5 +1,7 @@
 # kubernetes helm
 
+[If enjoy, please consider buying me a coffee.](https://www.buymeacoffee.com/ozbillwang)
+
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced
 
 [![DockerHub Badge](http://dockeri.co/image/alpine/helm)](https://hub.docker.com/r/alpine/helm/)

@@ -53,10 +53,10 @@ https://hub.docker.com/r/alpine/helm/tags/
         alpine/helm:3.1.1
 
     # run container as command
-    alias helm="docker run -ti --rm -v $(pwd):/apps -w /apps \
+    alias helm='docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
-        alpine/helm"
+        alpine/helm'
     helm --help
     
     # example in ~/.bash_profile

@@ -1,4 +1,4 @@
-BUILDX_VER=v0.5.1
+BUILDX_VER=v0.11.0
 
 install:
 	mkdir -vp ~/.docker/cli-plugins/ ~/dockercache

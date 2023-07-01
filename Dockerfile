@@ -22,8 +22,6 @@ RUN case `uname -m` in \
     chmod +x /usr/bin/helm && \
     rm -rf linux-${ARCH}
 
-RUN chmod +x /usr/bin/helm
-
 WORKDIR /apps
 
 ENTRYPOINT ["helm"]

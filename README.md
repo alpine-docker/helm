@@ -1,5 +1,7 @@
 # kubernetes helm
 
+[If enjoy, please consider buying me a coffee.](https://www.buymeacoffee.com/ozbillwang)
+
 Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/helm) when new release is announced
 
 [![DockerHub Badge](http://dockeri.co/image/alpine/helm)](https://hub.docker.com/r/alpine/helm/)
@@ -20,7 +22,7 @@ This feature was added on 23th May 2021.
 
 1. Versions 3.5.4 and 3.6.0-rc.1 have been manually pushed with support for multi-arch images.
 2. Older versions will not be updated to support multi-arch images.
-3. Newer versions going forward will support multi-arch images, including: --platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x.
+3. Newer versions going forward will support multi-arch images, including: `--platform linux/amd64,linux/arm/v7,linux/arm64/v8,linux/arm/v6,linux/ppc64le,linux/s390x`.
 4. I do not support other architectures besides amd64 since I do not have the necessary environments to test them. If you experience any issues with other platforms, please raise a PR to fix it.
 5. There is no difference in running `docker pull` and `docker run` commands with multi-arch docker images; you can run them as normal. For example, if you need to pull an image from arm64 (such as the new Mac M1 chip), you can run `docker pull alpine/helm:3.5.4` to get the image directly. Remember to specify the desired version number.
 
@@ -51,10 +53,10 @@ https://hub.docker.com/r/alpine/helm/tags/
         alpine/helm:3.1.1
 
     # run container as command
-    alias helm="docker run -ti --rm -v $(pwd):/apps -w /apps \
+    alias helm='docker run -ti --rm -v $(pwd):/apps -w /apps \
         -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
         -v ~/.cache/helm:/root/.cache/helm \
-        alpine/helm"
+        alpine/helm'
     helm --help
     
     # example in ~/.bash_profile

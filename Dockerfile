@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:3.18 as build
 
 # variable "VERSION" must be passed as docker environment variables during the image build
 # docker build --no-cache --build-arg VERSION=2.12.0 -t alpine/helm:2.12.0 .
@@ -21,6 +21,10 @@ RUN case `uname -m` in \
     mv linux-${ARCH}/helm /usr/bin/helm && \
     chmod +x /usr/bin/helm && \
     rm -rf linux-${ARCH}
+
+FROM alpine:3.18
+
+COPY --from=build /usr/bin/helm /usr/bin/helm
 
 WORKDIR /apps
 

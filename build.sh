@@ -50,7 +50,11 @@ build() {
       --build-arg VERSION=${tag} \
       -t ${image}:${tag} .
 
-  ./crane copy ${image}:${tag} ${image}:latest
+    minor=${tag%.*}
+    major=${tag%%.*}
+    for extraTag in ${minor} ${major} "latest"; do
+      ./crane copy ${image}:${tag} ${image}:${extraTag}
+    done
 
   fi
 }

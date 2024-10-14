@@ -37,8 +37,7 @@ jobs:
            #curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/stable/functions.sh" -o functions.sh
            curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/refs/heads/master/functions.sh" -o functions.sh 
            source functions.sh
-           HELM_VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not) ' \
-    | sort -rV | head -n 1 |sed 's/v//')
+           HELM_VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not) ' | sort -rV | head -n 1 |sed 's/v//')
            echo "Latest helm version is $HELM_VERSION"
            echo "HELM_VERSION=$HELM_VERSION" >> $GITHUB_ENV
 

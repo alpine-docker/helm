@@ -1,0 +1,106 @@
+name: Docker
+
+on:
+  push:
+    tags: ["*"]
+    branches:
+      - "main"
+      - "master"
+  schedule:
+    - cron: '0 5 * * 0'
+  pull_request:
+    branches: ["**"]
+
+env:
+  # Hostname of your registry
+  REGISTRY: docker.io
+  # Image repository, without hostname and tag
+  IMAGE_NAME: alpine/helm
+  SHA: ${{ github.event.pull_request.head.sha || github.event.after }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step to fetch the latest curl version
+      - name: Get latest curl version
+        id: curl-version
+        run: |
+           export CURL_OPTIONS="-sL -H \"Authorization: token ${{ secrets.API_KEY }}\""
+
+           #curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/stable/functions.sh" -o functions.sh
+           curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/refs/heads/master/functions.sh" -o functions.sh 
+           source functions.sh
+           HELM_VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not) ' \
+    | sort -rV | head -n 1 |sed 's/v//')
+           echo "Latest helm version is $HELM_VERSION"
+           echo "HELM_VERSION=$HELM_VERSION" >> $GITHUB_ENV
+
+      # Authenticate to the container registry
+      - name: Authenticate to registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Extract metadata (tags, labels) for Docker
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          labels: |
+            org.opencontainers.image.revision=${{ env.SHA }}
+          tags: |
+            type=edge,branch=$repo.default_branch
+            type=semver,pattern=v{{version}}
+            type=sha,prefix=,suffix=,format=short
+
+      # Build and push Docker image with Buildx
+      # (don't push on PR, load instead)
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v6
+        with:
+          platforms: linux/amd64,linux/arm64
+          sbom: ${{ github.event_name != 'pull_request' }}
+          provenance: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VERSION=${{ env.HELM_VERSION }}
+  
+      # - name: Checkout code
+      #   uses: actions/checkout@v2
+
+      # - name: check the platform in multi-arch images
+      #   run: |
+      #     echo ${{ steps.meta.outputs.tags }}
+      #     bash ./test.sh ${{ steps.meta.outputs.tags }}
+
+      - name: set tags
+        run: |
+          # install crane
+          curl -LO https://github.com/google/go-containerregistry/releases/download/v0.20.2/go-containerregistry_Linux_x86_64.tar.gz
+          tar zxvf go-containerregistry_Linux_x86_64.tar.gz
+          chmod +x crane
+
+          version=$(docker run --rm ${{ steps.meta.outputs.tags }} version)
+          version=$(echo ${version}| awk -F \" '{print $2}')
+
+          echo $version
+          ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
+          ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
+          ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${version}
+          rm -f /home/runner/.docker/config.json

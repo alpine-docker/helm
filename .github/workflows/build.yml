@@ -95,10 +95,14 @@ jobs:
           docker_version=$(echo ${docker_version}| awk -F \" '{print $2}' |sed 's/v//')
 
           echo $docker_version
+          minor=${docker_version%.*}
+          major=${docker_version%%.*}
           if [ "$docker_version" == "$VERSION" ]; then
             ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${minor}
+            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${major}
             rm -f /home/runner/.docker/config.json
           else
             echo "Versions are different. Skipping..."

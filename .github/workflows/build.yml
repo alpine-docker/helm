@@ -28,18 +28,13 @@ jobs:
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v3
 
-      # Step to fetch the latest curl version
-      - name: Get latest curl version
+      # Step to fetch the latest version
+      - name: Get latest version
         id: curl-version
         run: |
-           export CURL_OPTIONS="-sL -H \"Authorization: token ${{ secrets.API_KEY }}\""
-
-           #curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/stable/functions.sh" -o functions.sh
-           curl -H "Cache-Control: no-cache" -sL "https://raw.githubusercontent.com/alpine-docker/multi-arch-docker-images/refs/heads/master/functions.sh" -o functions.sh 
-           source functions.sh
-           HELM_VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not) ' | sort -rV | head -n 1 |sed 's/v//')
-           echo "Latest helm version is $HELM_VERSION"
-           echo "HELM_VERSION=$HELM_VERSION" >> $GITHUB_ENV
+           VERSION=$(curl -s https://api.github.com/repos/helm/helm/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not) ' | sort -rV | head -n 1 |sed 's/v//')
+           echo "Latest helm version is $VERSION"
+           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       # Authenticate to the container registry
       - name: Authenticate to registry ${{ env.REGISTRY }}
@@ -78,7 +73,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VERSION=${{ env.HELM_VERSION }}
+            VERSION=${{ env.VERSION }}
   
       # - name: Checkout code
       #   uses: actions/checkout@v2
@@ -95,11 +90,16 @@ jobs:
           tar zxvf go-containerregistry_Linux_x86_64.tar.gz
           chmod +x crane
 
-          version=$(docker run --rm ${{ steps.meta.outputs.tags }} version)
-          version=$(echo ${version}| awk -F \" '{print $2}')
+          # simple test
+          docker_version=$(docker run --rm ${{ steps.meta.outputs.tags }} version)
+          docker_version=$(echo ${docker_version}| awk -F \" '{print $2}')
 
-          echo $version
-          ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
-          ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
-          ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${version}
-          rm -f /home/runner/.docker/config.json
+          echo $docker_version
+          if [ "$docker_version" == "$VERSION" ]; then
+            ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
+            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
+            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            rm -f /home/runner/.docker/config.json
+          else
+            echo "Versions are different. Skipping..."
+          fi

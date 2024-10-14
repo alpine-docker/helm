@@ -6,9 +6,7 @@ Auto-trigger docker build for [kubernetes helm](https://github.com/kubernetes/he
 
 [![DockerHub Badge](http://dockeri.co/image/alpine/helm)](https://hub.docker.com/r/alpine/helm/)
 
-Circle CI - [![CircleCI](https://circleci.com/gh/alpine-docker/helm.svg?style=svg)](https://circleci.com/gh/alpine-docker/helm)
-
-## NOTES
+### NOTES
 
 The latest docker tag is the latest release version (https://github.com/helm/helm/releases/latest)
 
@@ -16,7 +14,11 @@ Please avoid to use `latest` tag for any production deployment. Tag with right v
 
 If you need run `kubectl` with `helm` together, please use another image [alpine/k8s](https://github.com/alpine-docker/k8s)
 
-## Additional notes about multi-arch images
+### Switch pipeline from Circle CI to Github Action
+
+On 14th Oct 2024, automation pipeline has been switched from Circle CI to Github Action
+
+### Additional notes about multi-arch images
 
 This feature was added on 23th May 2021.
 
@@ -32,7 +34,7 @@ https://github.com/alpine-docker/helm
 
 ### CI build logs
 
-https://app.circleci.com/pipelines/github/alpine-docker/helm?branch=master
+https://github.com/alpine-docker/helm/actions
 
 ### Docker image tags
 

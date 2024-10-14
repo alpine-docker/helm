@@ -92,7 +92,7 @@ jobs:
 
           # simple test
           docker_version=$(docker run --rm ${{ steps.meta.outputs.tags }} version)
-          docker_version=$(echo ${docker_version}| awk -F \" '{print $2}')
+          docker_version=$(echo ${docker_version}| awk -F \" '{print $2}' |sed 's/v//')
 
           echo $docker_version
           if [ "$docker_version" == "$VERSION" ]; then

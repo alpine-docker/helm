@@ -25,7 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-
+    outputs:
+      build_required: ${{ steps.curl-version.outputs.build_required }}
     steps:
       # Step to fetch the latest version
       - name: Get latest version

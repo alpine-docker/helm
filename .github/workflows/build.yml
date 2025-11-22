@@ -106,6 +106,8 @@ jobs:
       - name: set tags
         run: |
           echo "VERSION=${{ needs.check_tag.outputs.version }}" >> $GITHUB_ENV
+          echo $VERSION
+          echo ${{ env.VERSION }}
           # install crane
           curl -LO https://github.com/google/go-containerregistry/releases/download/v0.20.2/go-containerregistry_Linux_x86_64.tar.gz
           tar zxvf go-containerregistry_Linux_x86_64.tar.gz
@@ -118,10 +120,10 @@ jobs:
           echo $docker_version
           minor=${docker_version%.*}
           major=${docker_version%%.*}
-          if [ "$docker_version" == "$VERSION" ]; then
+          if [ "$docker_version" == "${{ needs.check_tag.outputs.version }}" ]; then
             ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
-            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:$VERSION
+            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${{ needs.check_tag.outputs.version }}
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${minor}
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${major}
             rm -f /home/runner/.docker/config.json

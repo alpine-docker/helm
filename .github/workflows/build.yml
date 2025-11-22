@@ -27,6 +27,7 @@ jobs:
       pull-requests: write
     outputs:
       build_required: ${{ steps.curl-version.outputs.build_required }}
+      version: ${{ steps.curl-version.outputs.version}}
     steps:
       # Step to fetch the latest version
       - name: Get latest version
@@ -34,7 +35,7 @@ jobs:
         run: |
            VERSION=$(curl -s https://api.github.com/repos/${REPO_NAME}/releases | jq -r '.[].tag_name | select(test("alpha|beta|rc") | not) ' | sort -rV | head -n 1 |sed 's/v//')
            echo "Latest version is $VERSION"
-           echo "VERSION=$VERSION" >> $GITHUB_ENV
+           echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
            status=$(curl -sL https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/${VERSION})
            echo $status
            if [[ ( "${status}" =~ "not found" ) ||( ${REBUILD} == "true" ) ]]; then
@@ -92,7 +93,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            VERSION=${{ env.VERSION }}
+            VERSION=${{ needs.check_tag.outputs.version }}
   
       # - name: Checkout code
       #   uses: actions/checkout@v2
@@ -104,6 +105,7 @@ jobs:
 
       - name: set tags
         run: |
+          echo "VERSION=${{ needs.check_tag.outputs.version }}" >> $GITHUB_ENV
           # install crane
           curl -LO https://github.com/google/go-containerregistry/releases/download/v0.20.2/go-containerregistry_Linux_x86_64.tar.gz
           tar zxvf go-containerregistry_Linux_x86_64.tar.gz
@@ -116,7 +118,7 @@ jobs:
           echo $docker_version
           minor=${docker_version%.*}
           major=${docker_version%%.*}
-          if [ "$docker_version" == "$VERSION" ]; then
+          if [ "$docker_version" == "${{ env.VERSION }}" ]; then
             ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${{ env.VERSION }}

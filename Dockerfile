@@ -1,4 +1,4 @@
-FROM alpine:3
+FROM alpine:edge
 
 # variable "VERSION" must be passed as docker environment variables during the image build
 # docker build --no-cache --build-arg VERSION=2.12.0 -t alpine/helm:2.12.0 .

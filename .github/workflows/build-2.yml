@@ -1,4 +1,5 @@
-name: Docker
+# target second latest major version
+name: Docker-2
 
 on:
   push:

@@ -123,7 +123,6 @@ jobs:
           major=${docker_version%%.*}
           if [ "$docker_version" == "${{ needs.check_tag.outputs.version }}" ]; then
             ./crane auth login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} index.docker.io
-            ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:latest
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${{ needs.check_tag.outputs.version }}
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${minor}
             ./crane copy ${{ steps.meta.outputs.tags }} ${{ env.IMAGE_NAME }}:${major}

@@ -2,6 +2,13 @@
 name: Docker-2
 
 on:
+  workflow_dispatch:
+    inputs:
+      REBUILD:
+        description: "Force rebuild"
+        required: false
+        type: boolean
+        default: false
   push:
     tags: ["*"]
     branches:
@@ -18,7 +25,7 @@ env:
   # Image repository, without hostname and tag
   IMAGE_NAME: alpine/helm
   REPO_NAME: helm/helm
-  REBUILD: false
+  REBUILD: ${{ github.event_name == 'workflow_dispatch' && inputs.REBUILD || false }}
   SHA: ${{ github.event.pull_request.head.sha || github.event.after }}
 
 jobs:
